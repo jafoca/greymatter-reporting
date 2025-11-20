@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Incident {
+  id              String    @id
+  ticket_number   String
+  title           String
+  severity        String
+  state           String
+  created_at      DateTime
+  escalated_at    DateTime?
+  acknowledged_at DateTime?
+  closed_at       DateTime?
+  rule_name       String?
+  close_code      String?
+  assignee_name   String?
+  raw_data        Json
+  activities      IncidentActivity[]
+  updated_at      DateTime  @updatedAt
+}
+
+model IncidentActivity {
+  id            Int      @id @default(autoincrement())
+  incident_id   String
+  incident      Incident @relation(fields: [incident_id], references: [id])
+  activity_type String
+  old_value     String?
+  new_value     String?
+  timestamp     DateTime
+}
